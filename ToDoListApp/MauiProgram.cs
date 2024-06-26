@@ -15,6 +15,8 @@ namespace ToDoListApp
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("MavenPro-VariableFont_wght.ttf", "Maven Pro");
+                    fonts.AddFont("IndieFlower-Regular.ttf", "Indie Flower");
                 });
             //var connectionString = $"Server={Environment.MachineName}\\{Environment.UserName};Database=MobileStore;Trusted_Connection=True;TrustServerCertificate=True;";
             string connectionString = "Server=DESKTOP-F1RTV5Q\\RAMI;Database=ToDoListApp;Trusted_Connection=True;TrustServerCertificate=True;";
