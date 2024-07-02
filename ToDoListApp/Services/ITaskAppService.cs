@@ -10,5 +10,6 @@ namespace ToDoListApp.Services
     public interface ITaskAppService
     {
         Task<List<TaskApp>> GetAllTasks();
+        Task<TaskApp> GetTaskByIdAsync(int id);
     }
 }

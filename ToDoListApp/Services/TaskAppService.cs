@@ -24,5 +24,13 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.ToListAsync();
             return request;
         }
+        public async Task<TaskApp> GetTaskByIdAsync(int id)
+        {
+            var request = await _context.TaskApps.FindAsync(id);
+            return request;
+        }
+
+     
+
     }
 }
