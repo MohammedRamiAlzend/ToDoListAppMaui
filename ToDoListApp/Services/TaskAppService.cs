@@ -29,6 +29,7 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.FindAsync(id);
             return request;
         }
+<<<<<<< HEAD
         public async Task createTaskAsync(TaskApp taskApp)
         {
             await _context.TaskApps.AddAsync(taskApp);
@@ -51,6 +52,10 @@ namespace ToDoListApp.Services
                 await _context.SaveChangesAsync();
             }
 
+=======
+        //ِيييييي
+     
+>>>>>>> 3aa424ea63927667a5c9b8224a1af019d4a17eec
 
 
 
