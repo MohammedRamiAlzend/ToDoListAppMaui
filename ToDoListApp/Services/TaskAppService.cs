@@ -29,35 +29,8 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.FindAsync(id);
             return request;
         }
-<<<<<<< HEAD
-        public async Task createTaskAsync(TaskApp taskApp)
-        {
-            await _context.TaskApps.AddAsync(taskApp);
-            await _context.SaveChangeAsync();
-            
-        }
-        
-            public async Task<TaskApp> UpdateTaskAsync(TaskApp taskApp)
-            {
-                _context.Entry(taskApp).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return taskApp;
-            }
-        public async Task DeleteTaskAsync(int id)
-        {
-            var taskApp = await _context.TaskApps.FindAsync(id);
-            if (taskApp != null)
-            {
-                _context.TaskApps.Remove(taskApp);
-                await _context.SaveChangesAsync();
-            }
 
-=======
-        //ِيييييي
      
->>>>>>> 3aa424ea63927667a5c9b8224a1af019d4a17eec
-
-
 
         }
 .
