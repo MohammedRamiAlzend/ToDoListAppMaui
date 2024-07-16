@@ -11,5 +11,11 @@ namespace ToDoListApp.Services
     {
         Task<List<TaskApp>> GetAllTasks();
         Task<TaskApp> GetTaskByIdAsync(int id);
+         Task<DateTime> GetDateAsync(DateTime dueDate);
+         Task<DateTime> GetSpecificDateAsync(DateTime dueDate);
+        Task<TaskApp> GetPropertyAsync(string propertyName, bool isImportant);
+        Task<bool> CreateTaskAsync(TaskApp taskApp);
+        Task<bool> UpdateTaskAsync(TaskApp taskApp);
+        Task<bool> DeleteTaskAsync(int taskId);
     }
 }
