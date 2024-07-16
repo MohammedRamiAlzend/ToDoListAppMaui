@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 using ToDoListApp.Data;
 using ToDoListApp.Models;
 using System.Linq;
+using Microsoft.VisualBasic;
 
 
 namespace ToDoListApp.Services
 {
-    public class TaskAppService:ITaskAppService
+    public class TaskAppService : ITaskAppService
     {
         private readonly AppDbContext _context;
         public TaskAppService(AppDbContext context)
         {
             _context = context;
         }
-
         public async Task<List<TaskApp>> GetAllTasks()
         {
             var request = await _context.TaskApps.ToListAsync();
@@ -31,71 +31,85 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.FindAsync(id);
             return request;
         }
-        public async Task<DateTime> GetDateAsync(DateTime dueDate)
+        public async Task<List<TaskApp>> GetTaskByDateAsync(DateTime startDate, DateTime endDate)
         {
-            return await Task.FromResult(DateTime.Now);
+            var request = await _context.TaskApps.Where(x => x.DueDate >= startDate && x.DueDate <= endDate).ToListAsync();
+            return request;
         }
-        public async Task<DateTime> GetSpecificDateAsync(DateTime dueDate)
+        public async Task<List<TaskApp>> GetTaskByDateAsync(DateTime dueDate)
         {
-            DateTime specificDate = new DateTime(2020, 1, 1);
-            return await Task.FromResult(specificDate);
+            var currentTime = dueDate.ToString("yyyy-MM-dd");
+            var request = await _context.TaskApps.Where(x => currentTime == x.DueDate.ToString("yyyy-MM-dd")).ToListAsync();
+            return request;
         }
-        public async Task<TaskApp> GetPropertyAsync(string propertyName, bool isImportant)
+        public async Task<List<TaskApp>> GetTaskByDateAsync()
         {
-            var tasks = await _context.TaskApps.ToListAsync();
-            if (tasks == null || !tasks.Any())
+            var currentTime = DateTime.Now.ToString("yyyy-MM-dd");
+            var request = await _context.TaskApps.Where(x => currentTime == x.DueDate.ToString("yyyy-MM-dd")).ToListAsync();
+            return request;
+        }
+
+        public async Task<DataBaseRequest<List<TaskApp>>> GetTasksByPriorityAsync(string priorityName)
+        {
+            var tasks = await _context.TaskApps.Where(x => x.Priority == priorityName).ToListAsync();
+            if (tasks.Count == 0)
             {
-                return null;
-            }
-            if (isImportant)
-            {
-                tasks = tasks 
+                return new DataBaseRequest<List<TaskApp>>
+                {
+                    Message = $"There is no tasks with {priorityName}",
+                    Success = false
+                };
             }
             else
             {
-                tasks = tasks.Where task => !task.isImportant
+                return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Data Retrieved Successfully ", Data = tasks };
             }
-            return 
-
         }
 
 
-        public async Task <bool> CreateTaskAsync(TaskApp taskApp)
+        public async Task<bool> CreateTaskAsync(TaskApp taskApp)
         {
-            if (taskApp.TaskAppId <= 0 || taskApp.CategoryId <= 0  || taskApp.Title ==null 
-                || taskApp.Description ==null || taskApp.Priority ==null )
+            if (taskApp.TaskAppId <= 0 || taskApp.CategoryId <= 0 || taskApp.Title == null
+                || taskApp.Description == null || taskApp.Priority == null)
             {
                 return false;
             }
 
             else
             {
-               await _context.TaskApps.AddAsync(taskApp);
+                await _context.TaskApps.AddAsync(taskApp);
                 int result = await _context.SaveChangesAsync();
                 if (result > 0)
                 {
-                   return true;
+                    return true;
                 }
-                else   
+                else
                 {
-                    return false ;
+                    return false;
                 }
-               
+
             }
 
 
-          // we are lucky
+            // we are lucky
 
         }
         public async Task<bool> UpdateTaskAsync(TaskApp taskApp)
         {
             _context.TaskApps.Update(taskApp);
-         await _context.SaveChangesAsync();
-            
+           int result=  await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public async Task<bool> DeleteTaskAsync(int taskId)
         {
-          var taskApp = await _context.TaskApps.FindAsync(taskId);
+            var taskApp = await _context.TaskApps.FindAsync(taskId);
             if (taskApp == null)
             {
                 return false;
@@ -117,12 +131,11 @@ namespace ToDoListApp.Services
 
         }
     }
-        
-    
+
 
     //best team
 
 
-        }
-    
+}
+
 
