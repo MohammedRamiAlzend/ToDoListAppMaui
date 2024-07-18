@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToDoListApp.Data;
 using ToDoListApp.Models;
 
 namespace ToDoListApp.Services
@@ -11,10 +12,11 @@ namespace ToDoListApp.Services
     {
         Task<List<TaskApp>> GetAllTasks();
         Task<TaskApp> GetTaskByIdAsync(int id);
-         Task<DateTime> GetDateAsync(DateTime dueDate);
-         Task<DateTime> GetSpecificDateAsync(DateTime dueDate);
-        Task<TaskApp> GetPropertyAsync(string propertyName, bool isImportant);
-        Task<bool> CreateTaskAsync(TaskApp taskApp);
+        Task<List<TaskApp>> GetTaskByDateAsync(DateTime startDate, DateTime endDate);
+        Task<List<TaskApp>> GetTaskByDateAsync(DateTime dueDate);
+        Task<List<TaskApp>> GetTaskByDateAsync();
+        Task<DataBaseRequest<List<TaskApp>>> GetTasksByPriorityAsync(string priorityName);
+        public Task<List<TaskApp>> GetTitle(string Title);
         Task<bool> UpdateTaskAsync(TaskApp taskApp);
         Task<bool> DeleteTaskAsync(int taskId);
     }

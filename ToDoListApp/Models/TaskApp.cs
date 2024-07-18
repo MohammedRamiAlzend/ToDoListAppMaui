@@ -26,7 +26,7 @@ namespace ToDoListApp.Models
 
         public string? Description { get; set; }
 
-        public DateTime DueDate { get; set; }
+        public DateTime  DueDate { get; set; }
 
         [Required]
         [MaxLength(10)]

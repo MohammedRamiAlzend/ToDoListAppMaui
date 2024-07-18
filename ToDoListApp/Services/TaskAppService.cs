@@ -31,6 +31,7 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.FindAsync(id);
             return request;
         }
+
         public async Task<List<TaskApp>> GetTaskByDateAsync(DateTime startDate, DateTime endDate)
         {
             var request = await _context.TaskApps.Where(x => x.DueDate >= startDate && x.DueDate <= endDate).ToListAsync();
@@ -48,7 +49,7 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.Where(x => currentTime == x.DueDate.ToString("yyyy-MM-dd")).ToListAsync();
             return request;
         }
-
+        // This method filters the list of items based on the priority of a task.
         public async Task<DataBaseRequest<List<TaskApp>>> GetTasksByPriorityAsync(string priorityName)
         {
             var tasks = await _context.TaskApps.Where(x => x.Priority == priorityName).ToListAsync();
@@ -65,11 +66,26 @@ namespace ToDoListApp.Services
                 return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Data Retrieved Successfully ", Data = tasks };
             }
         }
-
-
+        // This method filters the list of items based on the title of a task. 
+        public async Task<DataBaseRequest<List<TaskApp>>> GetTitle(string Title)
+        {
+            var request = await _context.TaskApps.Where(x => x.Title.Contains(Title, StringComparison.OrdinalIgnoreCase)).ToListAsync();
+            if (request.Count == 0)
+            {
+                return new DataBaseRequest<List<TaskApp>>
+                {
+                    Message = $"There is no title  {Title}",
+                    Success = false
+                };
+            }
+            else
+            {
+                return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Data Retrieved Successfully ", Data = request };
+            }
+        }
         public async Task<bool> CreateTaskAsync(TaskApp taskApp)
         {
-            if (taskApp.TaskAppId <= 0 || taskApp.CategoryId <= 0 || taskApp.Title == null
+            if (taskApp.CategoryId <= 0 || taskApp.Title == null
                 || taskApp.Description == null || taskApp.Priority == null)
             {
                 return false;
@@ -129,6 +145,26 @@ namespace ToDoListApp.Services
 
             }
 
+        }
+
+        public Task<DateTime> GetDateAsync(DateTime dueDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<DateTime> GetSpecificDateAsync(DateTime dueDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TaskApp> GetPropertyAsync(string propertyName, bool isImportant)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<TaskApp>> ITaskAppService.GetTitle(string Title)
+        {
+            throw new NotImplementedException();
         }
     }
 
