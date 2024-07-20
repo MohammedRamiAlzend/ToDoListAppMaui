@@ -26,28 +26,36 @@ namespace ToDoListApp.Services
             var request = await _context.TaskApps.ToListAsync();
             return request;
         }
-        public async Task<TaskApp> GetTaskByIdAsync(int id)
+        // This method filters the list of items based on the id of a task. 
+        public async Task<DataBaseRequest<TaskApp>> GetTaskByIdAsync(int id)
         {
             var request = await _context.TaskApps.FindAsync(id);
-            return request;
+            return new DataBaseRequest<TaskApp>
+            {
+                Message = "id is done",
+                Success = true,
+                Data = request
+            };
         }
-
-        public async Task<List<TaskApp>> GetTaskByDateAsync(DateTime startDate, DateTime endDate)
+        // This method filters the list of items based on  specified date range (startdate , and end date).
+        public async Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync(DateTime startDate, DateTime endDate)
         {
             var request = await _context.TaskApps.Where(x => x.DueDate >= startDate && x.DueDate <= endDate).ToListAsync();
-            return request;
+             return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Date Retrieved Successfully ", Data = request };
         }
-        public async Task<List<TaskApp>> GetTaskByDateAsync(DateTime dueDate)
+        //This method filters the list of items based on matching the specified date.
+        public async Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync(DateTime dueDate)
         {
             var currentTime = dueDate.ToString("yyyy-MM-dd");
             var request = await _context.TaskApps.Where(x => currentTime == x.DueDate.ToString("yyyy-MM-dd")).ToListAsync();
-            return request;
+            return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Date Retrieved Successfully ", Data = request };
         }
-        public async Task<List<TaskApp>> GetTaskByDateAsync()
+        // This method filters the list of items based on current date.
+        public async Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync()
         {
             var currentTime = DateTime.Now.ToString("yyyy-MM-dd");
             var request = await _context.TaskApps.Where(x => currentTime == x.DueDate.ToString("yyyy-MM-dd")).ToListAsync();
-            return request;
+            return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Date Retrieved Successfully ", Data = request };
         }
         // This method filters the list of items based on the priority of a task.
         public async Task<DataBaseRequest<List<TaskApp>>> GetTasksByPriorityAsync(string priorityName)
@@ -74,7 +82,7 @@ namespace ToDoListApp.Services
             {
                 return new DataBaseRequest<List<TaskApp>>
                 {
-                    Message = $"There is no title  {Title}",
+                    Message = $"There is no tasks with {Title}",
                     Success = false
                 };
             }
@@ -83,33 +91,37 @@ namespace ToDoListApp.Services
                 return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Data Retrieved Successfully ", Data = request };
             }
         }
-        public async Task<bool> CreateTaskAsync(TaskApp taskApp)
+        //  method of create tasks.
+        public async Task<DataBaseRequest> CreateTaskAsync(TaskApp taskApp)
         {
             if (taskApp.CategoryId <= 0 || taskApp.Title == null
                 || taskApp.Description == null || taskApp.Priority == null)
             {
-                return false;
+                return new DataBaseRequest
+                {
+                    Message = "Sorry it cannot be created",
+                    Success = false
+                };
             }
-
             else
             {
                 await _context.TaskApps.AddAsync(taskApp);
                 int result = await _context.SaveChangesAsync();
                 if (result > 0)
                 {
-                    return true;
+                    return new DataBaseRequest
+                    {
+                        Message = $"the task {taskApp.Title} has been created successfully" ,
+                        Success = true
+                    };
                 }
                 else
                 {
-                    return false;
+                    return new DataBaseRequest { Message = "Sorry it cannot be created", Success = false };
                 }
-
             }
-
-
-            // we are lucky
-
         }
+        //  method of update tasks.
         public async Task<bool> UpdateTaskAsync(TaskApp taskApp)
         {
             _context.TaskApps.Update(taskApp);
@@ -123,12 +135,17 @@ namespace ToDoListApp.Services
                 return false;
             }
         }
-        public async Task<bool> DeleteTaskAsync(int taskId)
+        // method of delete tasks.
+        public async Task<DataBaseRequest> DeleteTaskAsync(int taskId)
         {
             var taskApp = await _context.TaskApps.FindAsync(taskId);
             if (taskApp == null)
             {
-                return false;
+                return new DataBaseRequest
+                {
+                    Message = "Sorry it cannot be deleted",
+                    Success = false
+                };
             }
             else
             {
@@ -136,36 +153,22 @@ namespace ToDoListApp.Services
                 int result = await _context.SaveChangesAsync();
                 if (result > 0)
                 {
-                    return true;
+                    return new DataBaseRequest
+                    {
+                        Message = $"the task {taskApp.TaskAppId} has been deleted successfully",
+                        Success = true
+                    };
                 }
                 else
                 {
-                    return false;
+                    return new DataBaseRequest { Message = "Sorry it cannot be deleted", Success = false };
                 }
 
             }
 
         }
 
-        public Task<DateTime> GetDateAsync(DateTime dueDate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<DateTime> GetSpecificDateAsync(DateTime dueDate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TaskApp> GetPropertyAsync(string propertyName, bool isImportant)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<List<TaskApp>> ITaskAppService.GetTitle(string Title)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 
 

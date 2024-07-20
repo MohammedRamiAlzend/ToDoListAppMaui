@@ -11,13 +11,14 @@ namespace ToDoListApp.Services
     public interface ITaskAppService
     {
         Task<List<TaskApp>> GetAllTasks();
-        Task<TaskApp> GetTaskByIdAsync(int id);
-        Task<List<TaskApp>> GetTaskByDateAsync(DateTime startDate, DateTime endDate);
-        Task<List<TaskApp>> GetTaskByDateAsync(DateTime dueDate);
-        Task<List<TaskApp>> GetTaskByDateAsync();
+        Task<DataBaseRequest<TaskApp>> GetTaskByIdAsync(int id);
+        Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync(DateTime startDate, DateTime endDate);
+        Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync(DateTime dueDate);
+        Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync();
         Task<DataBaseRequest<List<TaskApp>>> GetTasksByPriorityAsync(string priorityName);
-        public Task<List<TaskApp>> GetTitle(string Title);
+        Task<DataBaseRequest<List<TaskApp>>> GetTitle(string Title);
+        Task<DataBaseRequest> CreateTaskAsync(TaskApp taskApp);
         Task<bool> UpdateTaskAsync(TaskApp taskApp);
-        Task<bool> DeleteTaskAsync(int taskId);
+        Task<DataBaseRequest> DeleteTaskAsync(int taskId);
     }
 }
