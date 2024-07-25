@@ -10,6 +10,7 @@ using ToDoListApp.Data;
 using ToDoListApp.Models;
 using System.Linq;
 using Microsoft.VisualBasic;
+using Azure.Core;
 
 
 namespace ToDoListApp.Services
@@ -41,7 +42,7 @@ namespace ToDoListApp.Services
         public async Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync(DateTime startDate, DateTime endDate)
         {
             var request = await _context.TaskApps.Where(x => x.DueDate >= startDate && x.DueDate <= endDate).ToListAsync();
-             return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Date Retrieved Successfully ", Data = request };
+            return new DataBaseRequest<List<TaskApp>> { Success = true, Message = "Date Retrieved Successfully ", Data = request };
         }
         //This method filters the list of items based on matching the specified date.
         public async Task<DataBaseRequest<List<TaskApp>>> GetTaskByDateAsync(DateTime dueDate)
@@ -111,7 +112,7 @@ namespace ToDoListApp.Services
                 {
                     return new DataBaseRequest
                     {
-                        Message = $"the task {taskApp.Title} has been created successfully" ,
+                        Message = $"the task {taskApp.Title} has been created successfully",
                         Success = true
                     };
                 }
@@ -125,7 +126,7 @@ namespace ToDoListApp.Services
         public async Task<bool> UpdateTaskAsync(TaskApp taskApp)
         {
             _context.TaskApps.Update(taskApp);
-           int result=  await _context.SaveChangesAsync();
+            int result = await _context.SaveChangesAsync();
             if (result > 0)
             {
                 return true;
@@ -167,14 +168,85 @@ namespace ToDoListApp.Services
             }
 
         }
+        //  method of create category.
+        public async Task <DataBaseRequest> CreateCategoryAsync(Category category)
+        {
+            if (category.CategoryId <= 0 || category.Name == null)
+            {
+                return new DataBaseRequest
+                {
+                    Message = "Sorry it cannot be created",
+                    Success = false
+                };
+            }
+            else
+            {
+                await _context.Categories.AddAsync(category);
+                int result = await _context.SaveChangesAsync();
+                if (result > 0)
+                {
+                    return new DataBaseRequest
+                    {
+                        Message = $"the task {category.Name} has been created successfully",
+                        Success = true
+                    };
+                }
+                else
+                {
+                    return new DataBaseRequest { Message = "Sorry it cannot be created", Success = false };
+                }
+            }
+        }
+        // method of update category
+       public async Task<DataBaseRequest> UpdateCategoryAsync(Category category)
+          {
+           var request = _context.Categories.Update(category);
+            int result = await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return new DataBaseRequest
+                {
+                    Message = $"the task  has been updeted successfully",
+                    Success = true
+                };
+            }
+            else
+            {
+                return new DataBaseRequest { Message = "Sorry it cannot be updated", Success = false };
+            }
+        }
+        // method of delete category .
+        public async Task <DataBaseRequest> DeleteCategoryAsync(int CategoryId)
+        {
+            var request = await _context.Categories.FindAsync(CategoryId);
+            if (request == null)
+            {
+                return new DataBaseRequest
+                {
+                    Message = "Sorry it cannot be deleted",
+                    Success = false
+                };
+            }
+            else
+            {
+                _context.Categories.Remove(request);
+                int result = await _context.SaveChangesAsync();
+                if (result > 0)
+                {
+                    return new DataBaseRequest
+                    {
+                        Message = $"the task {request.CategoryId} has been deleted successfully",
+                        Success = true
+                    };
+                }
+                else
+                {
+                    return new DataBaseRequest { Message = "Sorry it cannot be deleted", Success = false };
+                }
 
-      
+            }
+        }
+
     }
-
-
-    //best team
-
-
 }
-
 

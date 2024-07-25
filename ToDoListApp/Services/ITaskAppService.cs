@@ -20,5 +20,9 @@ namespace ToDoListApp.Services
         Task<DataBaseRequest> CreateTaskAsync(TaskApp taskApp);
         Task<bool> UpdateTaskAsync(TaskApp taskApp);
         Task<DataBaseRequest> DeleteTaskAsync(int taskId);
+        Task<DataBaseRequest> CreateCategoryAsync(Category category);
+        Task<DataBaseRequest> UpdateCategoryAsync(Category category);
+       Task<DataBaseRequest> DeleteCategoryAsync(int CategoryId);
+
     }
 }
